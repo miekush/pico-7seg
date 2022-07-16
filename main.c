@@ -123,7 +123,8 @@ void update_display(uint32_t value)
     gpio_clr_mask(segment_mask);
 
     //loop to sequentially drive each digit
-    for(int i = 0; i < 4; i++)
+    int i = 0;
+    do
     {
         //turn all digits off
         gpio_put_masked(digit_mask, digit_mask);
@@ -131,11 +132,10 @@ void update_display(uint32_t value)
         gpio_put(digit_pins[3-i], 0);
         //write digit value
         gpio_put_masked(segment_mask, segment_pins[value % 10]);
-        //move to next digit
-        value /= 10;
         //2000us seems to work well :p
         sleep_us(2000);
-    }
+        i++;
+    } while (value /= 10);
 }
 
 //timer interrupt callback to increment counter
